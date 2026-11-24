@@ -165,13 +165,13 @@
           </div>
         </div>
 
-        <!-- LADO DERECHO: FORMULARIO Y ACCESO RÁPIDO DEMO -->
+        <!-- LADO DERECHO: FORMULARIO -->
         <div class="auth-form-side">
           <div class="auth-form-card">
             
             <div style="margin-bottom: 1.5rem;">
               <h2 style="font-size: 1.6rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;">Portal de Acceso</h2>
-              <p class="subtitle">Inicie sesión con su cuenta o pruebe con los roles de evaluación.</p>
+              <p class="subtitle">Inicie sesión con su cuenta.</p>
             </div>
 
             <div id="auth-message" class="card mb-3" style="${message ? '' : 'display:none;'}">
@@ -236,31 +236,6 @@
                 Registrar Solicitud de Cuenta
               </button>
             </form>
-
-            <!-- PANEL DE ACCESO RÁPIDO / MODO DEMO -->
-            <div class="demo-access-panel">
-              <div class="demo-access-title">
-                <span>⚡</span> Acceso Rápido / Modo Demostración
-              </div>
-              <p style="font-size: 0.75rem; color: #475569; margin-bottom: 0.65rem;">
-                Haga clic en cualquiera de los roles para ingresar inmediatamente y explorar las funciones:
-              </p>
-              
-              <div class="demo-role-grid">
-                <button type="button" class="btn-demo-role" data-demo-role="solicitante" title="Ingresar como Maestro de Obra">
-                  <span>👷</span> Maestro de Obra
-                </button>
-                <button type="button" class="btn-demo-role" data-demo-role="aprobador" title="Ingresar como Ingeniero Residente">
-                  <span>📐</span> Ing. Residente
-                </button>
-                <button type="button" class="btn-demo-role" data-demo-role="almacenero" title="Ingresar como Almacenero">
-                  <span>📦</span> Jefe Almacén
-                </button>
-                <button type="button" class="btn-demo-role" data-demo-role="admin" title="Ingresar como Superadministrador">
-                  <span>🛡️</span> Administrador
-                </button>
-              </div>
-            </div>
 
           </div>
         </div>
@@ -344,15 +319,6 @@
       }
     });
 
-    // Botones de Modo Demo / Evaluación Rápida
-    content.querySelectorAll('.btn-demo-role').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const role = btn.getAttribute('data-demo-role');
-        const user = window.OC.auth.loginDemo(role);
-        showToast(`Ingresó en Modo Evaluación como: ${user.name} (${window.OC.auth.getRoleLabel(user.role)})`, 'success');
-        enterApp();
-      });
-    });
   }
 
   // ----------------------------------------------------

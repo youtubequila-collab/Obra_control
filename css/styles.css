@@ -1537,56 +1537,6 @@ body {
   padding: 2.5rem;
 }
 
-.demo-access-panel {
-  background-color: var(--primary-light);
-  border: 1px solid var(--primary-border);
-  border-radius: var(--radius-md);
-  padding: 1.25rem;
-  margin-top: 1.75rem;
-}
-
-.demo-access-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: 0.75rem;
-  letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.demo-role-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-
-.btn-demo-role {
-  padding: 0.55rem 0.75rem;
-  background-color: #ffffff;
-  border: 1px solid var(--primary-border);
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-main);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  transition: all 0.15s ease;
-  text-align: left;
-}
-
-.btn-demo-role:hover {
-  background-color: var(--primary);
-  color: #ffffff;
-  border-color: var(--primary);
-  transform: translateY(-1px);
-}
-
 /* ==========================================================================
    NOTIFICACIONES FLOTANTES (TOASTS)
    ========================================================================== */
