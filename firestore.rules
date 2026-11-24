@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isSuperAdmin() {
+      return isAuthenticated()
+        && request.auth.token.email == 'quilalaime@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function userData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isActiveUser() {
+      return isAuthenticated() && request.auth.token.email_verified == true
+        && userData().active == true
+        && userData().status == 'active';
+    }
+
+    function isAdmin() {
+      return isSuperAdmin() || (isActiveUser() && userData().role == 'admin');
+    }
+
+    function isEngineer() {
+      return isActiveUser() && (userData().role == 'aprobador' || isAdmin());
+    }
+
+    function isWarehouse() {
+      return isActiveUser() && (userData().role == 'almacenero' || isAdmin());
+    }
+
+    match /projects/{projectId} {
+      allow read: if isActiveUser();
+      allow write: if isAdmin();
+    }
+
+    match /materials/{materialId} {
+      allow read: if isActiveUser();
+      allow write: if isActiveUser();
+    }
+
+    match /requests/{requestId} {
+      allow read: if isActiveUser();
+      allow create: if isActiveUser()
+        && (userData().role in ['solicitante', 'admin'] || isSuperAdmin())
+        && request.resource.data.status == 'PENDIENTE_APROBACION'
+        && request.resource.data.items.size() > 0;
+      allow update: if isAdmin() || (
+        isEngineer() && request.resource.data.status in ['APROBADA', 'RECHAZADA']
+      ) || (
+        isWarehouse() && request.resource.data.status in ['ENTREGA_PARCIAL', 'ENTREGADA', 'PENDIENTE_ENTREGA']
+      );
+      allow delete: if isSuperAdmin();
+    }
+
+    match /deliveryVouchers/{voucherId} {
+      allow read: if isActiveUser();
+      allow create: if isWarehouse() && request.resource.data.items.size() > 0;
+      allow update, delete: if isAdmin();
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isActiveUser();
+      allow update, delete: if false;
+    }
+
+    match /users/{userId} {
+      allow get: if isSuperAdmin() || isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+      allow list: if isSuperAdmin() || isAdmin();
+      allow create: if isSuperAdmin() || (
+        isAuthenticated()
+        && request.auth.uid == userId
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.active == (request.resource.data.role in ['solicitante', 'aprobador'])
+        && (
+          (request.resource.data.role == 'admin' && request.resource.data.status == 'pending')
+          || (request.resource.data.role in ['solicitante', 'aprobador'] && request.resource.data.status == 'active')
+        )
+      );
+      allow update: if isSuperAdmin();
+      allow delete: if isSuperAdmin();
+    }
+  }
+}

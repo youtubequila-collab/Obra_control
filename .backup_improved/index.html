@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ObraControl - Sistema de gestión de pedidos, entregas de materiales y control de obra">
+  <meta name="theme-color" content="#0b1120">
+  <title>ObraControl | Pedidos y Entregas de Materiales de Obra</title>
+  
+  <!-- FUENTES TIPOGRÁFICAS MODERNAS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- HOJA DE ESTILOS PRINCIPAL -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- SDK OFICIAL DE FIREBASE COMPAT (Carga en tiempo real si hay conexión) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- MENÚ LATERAL (SIDEBAR DE NAVEGACIÓN ESTRUCTURADO) -->
+    <aside class="sidebar" id="app-sidebar" aria-label="Menú principal de navegación">
+      <div class="sidebar-header">
+        <a href="#" class="app-brand" onclick="window.OC.ui && window.OC.ui.navigate ? window.OC.ui.navigate('dashboard') : null; return false;" aria-label="Ir a Inicio de ObraControl">
+          <div class="brand-badge-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 22h20"/>
+              <path d="M14 12V2h-4v10"/>
+              <path d="M4 22V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14"/>
+              <path d="M10 18h4"/>
+              <path d="M10 14h4"/>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">Obra<span>Control</span></div>
+            <div class="brand-subtitle">Vales y Logística</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- SELECTOR RÁPIDO: OBRA QUE ESTOY VIENDO -->
+      <div class="sidebar-project-selector" id="sidebar-project-container">
+        <div class="sidebar-project-label-row">
+          <span class="sidebar-project-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"/></svg>
+            Obra que estoy viendo
+          </span>
+          <button type="button" class="help-btn" data-help="Filtra toda la pantalla para mostrarte solo la obra que elijas." title="Ayuda sobre obra activa" aria-label="Ayuda sobre obra activa">?</button>
+        </div>
+        <select class="sidebar-project-select" id="sidebar-active-project-select" aria-label="Seleccionar la obra que estoy viendo" title="Selecciona la obra activa para filtrar el sistema">
+          <!-- Generado dinámicamente -->
+        </select>
+      </div>
+
+      <!-- MENÚ DE NAVEGACIÓN AGRUPADO -->
+      <nav class="sidebar-nav" id="sidebar-nav" aria-label="Opciones del sistema">
+        <!-- Generado dinámicamente según rol y permisos -->
+      </nav>
+
+      <!-- PIE DE SIDEBAR -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-text">
+          <strong>ObraControl v2.0</strong>
+          <span>Vales y Logística</span>
+        </div>
+        <span class="badge badge-success" style="font-size: 0.75rem;">En línea</span>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DE LA APLICACIÓN -->
+    <div class="main-wrapper">
+      
+      <!-- BARRA SUPERIOR (TOPBAR HEADER) -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Abrir Menú de Navegación">☰</button>
+          
+          <div class="topbar-breadcrumb" id="topbar-breadcrumb" aria-label="Ubicación actual">
+            <span>ObraControl</span>
+            <span class="topbar-breadcrumb-sep" aria-hidden="true">/</span>
+            <strong id="topbar-current-view">Inicio</strong>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Indicador de conexión Híbrido (Local / Firebase Cloud) -->
+          <div class="cloud-sync-pill" id="cloud-status-pill" title="Estado de conexión y sincronización en la nube" tabindex="0" role="button">
+            <span class="pulse-indicator" id="cloud-status-dot"></span>
+            <span id="cloud-status-text">Modo Local Offline</span>
+          </div>
+
+          <button class="btn btn-xs btn-outline" id="btn-quick-firebase-setup" title="Configurar credenciales o sincronizar Firebase">
+            🔥 Firebase
+          </button>
+
+          <!-- Perfil y acciones de usuario -->
+          <div id="user-profile-header">
+            <!-- Generado dinámicamente por app.js -->
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENEDOR DE VISTAS PRINCIPALES -->
+      <main class="content-area" id="main-content-area" tabindex="-1">
+        <!-- Renderizado dinámico de Vistas (Inicio, Pedidos, Pedidos por aprobar, etc.) -->
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- CONTENEDOR DE NOTIFICACIONES TOAST FLOTANTES -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- TOOLTIP FLOTANTE DE AYUDA RÁPIDA (?) -->
+  <div id="help-tooltip-bubble" class="help-tooltip-bubble" role="tooltip" aria-hidden="true"></div>
+
+  <!-- SCRIPTS EN ORDEN DE DEPENDENCIA OPERACIONAL -->
+  <script src="js/storage.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/requests.js"></script>
+  <script src="js/approvals.js"></script>
+  <script src="js/deliveries.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

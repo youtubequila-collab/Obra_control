@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="ObraControl - Portal de Análisis y Gestión — Solo Administradores">
+  <meta name="theme-color" content="#0b1120">
+  <title>ObraControl | Análisis y Gestión — Administración</title>
+
+  <!-- FUENTES TIPOGRÁFICAS MODERNAS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- HOJA DE ESTILOS PRINCIPAL -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- ESTILOS EXTRAS PARA PORTAL ADMIN -->
+  <style>
+    /* =====================================================
+       PORTAL DE ACCESO BLOQUEADO (PANTALLA DE ACCESO DENEGADO)
+       ===================================================== */
+    .access-denied-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0b1120 0%, #1e3a8a 100%);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .access-denied-card {
+      background: #fff;
+      border-radius: 1.5rem;
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    }
+
+    .access-denied-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .access-denied-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+    }
+
+    .access-denied-msg {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    /* =====================================================
+       INDICADOR DE ROL ACTIVO EN TOPBAR (SOLO ADMIN)
+       ===================================================== */
+    .admin-role-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: linear-gradient(90deg, #1e40af, #2563eb);
+      color: #fff;
+      border-radius: 9999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    /* =====================================================
+       HEADER DEL PORTAL ADMIN
+       ===================================================== */
+    .admin-portal-header {
+      background: var(--sidebar-bg);
+      border-bottom: 1px solid var(--sidebar-border);
+      padding: 0 1.5rem;
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-portal-header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .admin-portal-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .admin-portal-brand .brand-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .admin-portal-brand .brand-title span {
+      color: #60a5fa;
+    }
+
+    .admin-portal-brand .brand-subtitle {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .admin-portal-nav-tabs {
+      display: flex;
+      gap: 0.25rem;
+      border-bottom: none;
+      flex: 1;
+      justify-content: center;
+      padding: 0 1rem;
+    }
+
+    .admin-nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .admin-nav-tab:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    .admin-nav-tab.active {
+      background: rgba(37,99,235,0.3);
+      border-color: rgba(96,165,250,0.4);
+      color: #60a5fa;
+    }
+
+    .admin-nav-tab .nav-badge {
+      background: #ef4444;
+      color: #fff;
+      border-radius: 9999px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 0.1rem 0.4rem;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .admin-portal-header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* =====================================================
+       CONTENT AREA DEL PORTAL ADMIN
+       ===================================================== */
+    .admin-portal-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg-app);
+    }
+
+    .admin-portal-content {
+      flex: 1;
+      padding: 1.75rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* =====================================================
+       VISTAS (TABS) DEL PORTAL DE ADMINISTRACIÓN
+       ===================================================== */
+    .admin-view-panel {
+      display: none;
+    }
+
+    .admin-view-panel.active {
+      display: block;
+    }
+
+    /* =====================================================
+       BANNER DE BIENVENIDA ADMIN
+       ===================================================== */
+    .admin-welcome-banner {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0ea5e9 100%);
+      border-radius: 1rem;
+      padding: 1.5rem 2rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .admin-welcome-banner h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 0.25rem;
+    }
+
+    .admin-welcome-banner p {
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    /* =====================================================
+       BOTÓN DE IR AL PANEL PRINCIPAL
+       ===================================================== */
+    .btn-go-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .btn-go-main:hover {
+      background: rgba(255,255,255,0.25);
+    }
+
+    @media (max-width: 768px) {
+      .admin-portal-nav-tabs {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 0;
+      }
+      .admin-portal-content {
+        padding: 1rem;
+      }
+      .admin-welcome-banner {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <!-- SDK OFICIAL DE FIREBASE COMPAT -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+
+  <!-- CONTENEDOR DE NOTIFICACIONES TOAST -->
+  <div id="toast-container"></div>
+
+  <!-- PANTALLA DE VERIFICACIÓN (Mientras se valida el rol) -->
+  <div id="admin-loading-screen" style="
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh; background:#0b1120; flex-direction:column; gap:1rem;
+  ">
+    <div style="font-size:2.5rem;">🔐</div>
+    <div style="color:#94a3b8; font-size:0.95rem; font-weight:600;">
+      Verificando permisos de administrador...
+    </div>
+  </div>
+
+  <!-- PANTALLA DE ACCESO DENEGADO -->
+  <div id="admin-denied-screen" class="access-denied-screen" style="display:none;">
+    <div class="access-denied-card">
+      <div class="access-denied-icon">🚫</div>
+      <div class="access-denied-title">Acceso Restringido</div>
+      <div class="access-denied-msg">
+        Este portal de <strong>Análisis y Gestión</strong> está reservado exclusivamente
+        para cuentas con perfil <strong>Administrador de Obra</strong>.<br><br>
+        Su sesión actual no tiene los permisos requeridos para acceder a este módulo.
+      </div>
+      <a href="index.html" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.5rem;">
+        ← Volver al Panel Principal
+      </a>
+    </div>
+  </div>
+
+  <!-- PORTAL DE ADMINISTRACIÓN (Solo visible para admins) -->
+  <div id="admin-portal" class="admin-portal-wrapper" style="display:none;">
+
+    <!-- HEADER ESTÁTICO DEL PORTAL ADMIN -->
+    <header class="admin-portal-header">
+      <div class="admin-portal-header-left">
+        <!-- BRAND -->
+        <a href="index.html" class="admin-portal-brand" title="Volver al Panel Principal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 22h20" />
+            <path d="M14 12V2h-4v10" />
+            <path d="M4 22V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14" />
+            <path d="M10 18h4" />
+            <path d="M10 14h4" />
+          </svg>
+          <div>
+            <div class="brand-title">Obra<span>Control</span></div>
+            <div class="brand-subtitle">Análisis y Gestión</div>
+          </div>
+        </a>
+
+        <!-- SEPARADOR -->
+        <span style="color:#334155; font-size:1.25rem; font-weight:200;">|</span>
+
+        <!-- TABS DE NAVEGACIÓN DEL PORTAL ADMIN -->
+        <nav class="admin-portal-nav-tabs" id="admin-nav-tabs">
+          <button class="admin-nav-tab active" data-panel="panel-reports">
+            📊 Reportes
+          </button>
+          <button class="admin-nav-tab" data-panel="panel-materials">
+            🧱 Materiales
+          </button>
+          <button class="admin-nav-tab" data-panel="panel-projects">
+            🏢 Obras y Frentes
+          </button>
+          <button class="admin-nav-tab" data-panel="panel-users">
+            👥 Usuarios y Roles
+          </button>
+          <button class="admin-nav-tab" data-panel="panel-audit">
+            🛡️ Auditoría
+          </button>
+          <button class="admin-nav-tab" data-panel="panel-backup">
+            💾 Respaldo
+          </button>
+        </nav>
+      </div>
+
+      <div class="admin-portal-header-right">
+        <!-- INDICADOR CLOUD STATUS -->
+        <div class="cloud-sync-pill" id="admin-cloud-pill" style="cursor:default; pointer-events:none;">
+          <span class="pulse-indicator" id="admin-cloud-dot"></span>
+          <span id="admin-cloud-text">Verificando...</span>
+        </div>
+
+        <!-- PERFIL DEL ADMIN -->
+        <div id="admin-user-widget" style="display:flex; align-items:center; gap:0.5rem;"></div>
+      </div>
+    </header>
+
+    <!-- ÁREA DE CONTENIDO DEL PORTAL -->
+    <main class="admin-portal-content" id="admin-main-content">
+      <!-- Renderizado dinámico por admin-panel.js -->
+    </main>
+
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/storage.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/requests.js"></script>
+  <script src="js/approvals.js"></script>
+  <script src="js/deliveries.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/admin-panel.js"></script>
+
+</body>
+
+</html>

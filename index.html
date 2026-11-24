@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="ObraControl - Plataforma Empresarial de Gestión y Control de Insumos, Solicitudes y Vales de Salida de Obra">
+  <meta name="theme-color" content="#0b1120">
+  <title>ObraControl | Panel Principal — Sistema de Insumos y Vales de Obra</title>
+
+  <!-- FUENTES TIPOGRÁFICAS MODERNAS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- HOJA DE ESTILOS PRINCIPAL -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- SDK OFICIAL DE FIREBASE COMPAT (Carga en tiempo real si hay conexión) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- MENÚ LATERAL (SIDEBAR DE NAVEGACIÓN ESTRUCTURADO) -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="app-brand"
+          onclick="window.OC.ui && window.OC.ui.navigate ? window.OC.ui.navigate('dashboard') : null; return false;">
+          <div class="brand-badge-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 22h20" />
+              <path d="M14 12V2h-4v10" />
+              <path d="M4 22V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14" />
+              <path d="M10 18h4" />
+              <path d="M10 14h4" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">Obra<span>Control</span></div>
+            <div class="brand-subtitle">Vales & Logística</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- SELECTOR RÁPIDO DE OBRA ACTIVA -->
+      <div class="sidebar-project-selector" id="sidebar-project-container">
+        <span class="sidebar-project-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16" />
+          </svg>
+          Obra Activa
+        </span>
+        <select class="sidebar-project-select" id="sidebar-active-project-select"
+          title="Seleccione la obra activa para filtrar el sistema">
+          <!-- Generado dinámicamente -->
+        </select>
+      </div>
+
+      <!-- MENÚ DE NAVEGACIÓN AGRUPADO -->
+      <nav class="sidebar-nav" id="sidebar-nav">
+        <!-- Generado dinámicamente según permisos y roles -->
+      </nav>
+
+      <!-- PIE DE SIDEBAR -->
+      <div class="sidebar-footer">
+        <div class="sidebar-footer-text">
+          <strong>ObraControl v2.0</strong>
+          <span>Arquitectura Híbrida</span>
+        </div>
+        <span class="badge badge-success" style="font-size: 0.65rem;">ONLINE</span>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DE LA APLICACIÓN -->
+    <div class="main-wrapper">
+
+      <!-- BARRA SUPERIOR (TOPBAR HEADER) -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Abrir Menú de Navegación">☰</button>
+
+          <div class="topbar-breadcrumb" id="topbar-breadcrumb">
+            <span>ObraControl</span>
+            <span class="topbar-breadcrumb-sep">/</span>
+            <strong id="topbar-current-view">Panel Principal</strong>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Indicador de conexión Híbrido (Local / Firebase Cloud) -->
+          <div class="cloud-sync-pill" id="cloud-status-pill"
+            title="Haga clic para ver o configurar la sincronización de Cloud Firestore">
+            <span class="pulse-indicator" id="cloud-status-dot"></span>
+            <span id="cloud-status-text">Modo Local Offline</span>
+          </div>
+
+          <button class="btn btn-xs btn-outline" id="btn-quick-firebase-setup"
+            title="Configurar credenciales o sincronizar Firebase">
+            🔥 Firebase
+          </button>
+
+          <!-- Perfil y acciones de usuario -->
+          <div id="user-profile-header">
+            <!-- Generado dinámicamente por app.js -->
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENEDOR DE VISTAS PRINCIPALES -->
+      <main class="content-area" id="main-content-area">
+        <!-- Renderizado dinámico de Vistas (Dashboard, Solicitudes, Aprobaciones, etc.) -->
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- CONTENEDOR DE NOTIFICACIONES TOAST FLOTANTES -->
+  <div id="toast-container"></div>
+
+  <!-- SCRIPTS EN ORDEN DE DEPENDENCIA OPERACIONAL -->
+  <script src="js/storage.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/requests.js"></script>
+  <script src="js/approvals.js"></script>
+  <script src="js/deliveries.js"></script>
+  <script src="js/reports.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>
